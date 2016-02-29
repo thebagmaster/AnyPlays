@@ -44,17 +44,6 @@ Architecture
     Command
         admin (bool)
         banned (bool)
-        
-        trigger
-            Chat String
-            
-        type
-            1 Chat - Default
-            2 Key Command/Combo
-            3 Mouse Command/Combo
-            4 Joy Command/Combo
-            5 Mode Command
-            6 Admin Command
             
         Execute
             Combo.execute()
