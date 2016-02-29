@@ -1,6 +1,7 @@
-import tkinter
-from tkinter import *
-from tkinter import ttk
+# -*- coding: utf-8 -*-
+import Tkinter
+from Tkinter import *
+import ttk
 from collections import defaultdict
 from collections import Counter
 
@@ -9,14 +10,22 @@ from time import sleep
 from listb import *
 
 class Demo(object):
-    def __init__(self, mode, voteboxsize):
+    quit=False
+    def __init__(self, mode, voteboxsize, TP, channel, CON, COMMANDS, paused=[False],pause=[0],resume=[0]):
         self.mode = mode
         self.listb = Lb(voteboxsize[0],voteboxsize[1])
         self.current = 0
         self.votesraw = []
         self.topcmd = 'linger'
         self.max = 30
-		self.guivar = 0
+        self.guivar = 0
+        self.TP=TP
+        self.CON=CON
+        self.COMMANDS=COMMANDS
+        self.channel=channel
+        self.paused=paused
+        self.pause=pause
+        self.resume=resume
         
     def createGui(self,root,bg='black',ft="LucidaConsole 10 bold",fg='#FF6600'):
         self.s = ttk.Style()
@@ -27,14 +36,14 @@ class Demo(object):
         self.s.configure("orange.Horizontal.TProgressbar", foreground='#FF6600', background='#FF6600', troughcolor =bg)
         self.s.configure("ltgreen.Horizontal.TProgressbar", foreground='#7FFF00', background='#7FFF00', troughcolor =bg)
         
-        self.frame = tkinter.Frame(root, bg=bg)
+        self.frame = Tkinter.Frame(root, bg=bg)
         
         self.mode.createGui(self.frame).pack()
         
         self.guivar = IntVar()
         self.guivar.set(self.current)
         
-        self.innerframe = tkinter.Frame(self.frame, bg=bg)
+        self.innerframe = Tkinter.Frame(self.frame, bg=bg)
         self.bar = ttk.Progressbar(self.innerframe, style="green.Horizontal.TProgressbar", orient='vertical', \
         mode='determinate',length=105,variable=self.guivar,maximum=self.max)
         self.bar.pack(side=LEFT)
@@ -64,8 +73,8 @@ class Demo(object):
         sleep(.99)
         if mode.switch :
             self.current += 1
-            if globals.M_PAUSES.active :
-                globals.GAME.resume()
+            if self.paused[0] :
+                self.resume[0]()
         else :
             self.current = 0
             self.votesraw = []
@@ -73,7 +82,8 @@ class Demo(object):
             
         self.updateGui()
         self.checkIfTimed()
-        globals.TP.submit(globals.DEMO.count)
+        if not self.quit:
+            self.TP.submit(self.count)
         
     def updateVotes(self) :
         self.talliedvotes = Counter(self.votesraw).most_common()
@@ -93,17 +103,15 @@ class Demo(object):
     
     def checkIfTimed(self) :
         if self.current >= self.max :
-            if globals.M_PAUSES.active :
-                globals.GAME.resume()
+            if self.paused[0] :
+                self.resume[0]()
             self.current = 0
             sleep(0.05)
-            globals.CMD.process('Demo',self.topcmd)
+            self.COMMANDS[self.topcmd].execute()
             sleep(0.05)
-            if globals.M_PAUSES.active :
-                globals.GAME.pause()
-            globals.CON.privmsg("#twitchplaysfallouts","____________")
-            globals.CON.privmsg("#twitchplaysfallouts","____________")
-            globals.CON.privmsg("#twitchplaysfallouts","Too late to vote Kappa")
+            if self.paused[0] :
+                self.pause[0]()
+            self.CON[0].privmsg(self.channel,"╚═ Too late to vote Kappa ═╝")
             self.current = 0
             self.guivar.set(self.current)
             self.votesraw = []

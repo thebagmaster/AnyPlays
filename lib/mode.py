@@ -1,33 +1,37 @@
+import Tkinter
+from Tkinter import *
+import ttk
+
 class Mode:
-	def __init__(self,name,posswitch,negswitch,max,min,init,ref,loss,width,grid=[0,0],pad=[5,5]):
-		self.switch = True
-		self.name = name
-		self.pos = posswitch
-		self.neg = negswitch
-		self.max = max
-		self.min = min
-		self.value = init
-		self.ref = ref
-		self.loss = loss
-		self.grid = grid
-		self.pad = pad
-		self.width = width
-		self.mid = ((abs(max)+abs(min))//2)+min
-		self.guivar = 0
-		
-	def update(self,change=0):
-		if change != 0:
-			self.value += change
-		if self.value >= self.pos:
-			self.switch = True
-		if self.value < self.neg:
-			self.switch = False
-		if self.value > max:
-			self.value = max
-		if self.value < min:
-			self.value = min
-		self.updateGui()
-			
+    def __init__(self,name,loname,hiname,posswitch,negswitch,max,min,init,width,grid=[0,0],pad=[5,5]):
+        self.switch = True
+        self.name = name
+        self.loname = loname
+        self.hiname = hiname
+        self.pos = posswitch
+        self.neg = negswitch
+        self.max = max
+        self.min = min
+        self.value = init
+        self.grid = grid
+        self.pad = pad
+        self.width = width
+        self.mid = ((abs(max)+abs(min))//2)+min
+        self.guivar = 0
+        
+    def update(self,change=0):
+        if change != 0:
+            self.value += change
+        if self.value >= self.pos:
+            self.switch = True
+        if self.value < self.neg:
+            self.switch = False
+        if self.value > max:
+            self.value = max
+        if self.value < min:
+            self.value = min
+        self.updateGui()
+            
     def updateGui(self) :
         self.guivar.set(self.value)
         if (self.value) >= self.pos : 
@@ -39,7 +43,7 @@ class Mode:
         else :
             self.bar["style"] = "red.Horizontal.TProgressbar"
 
-	def createGui(self, root, bg='black',ft="LucidaConsole 10 bold",fg='#FF6600') :
+    def createGui(self, root, bg='black',ft="LucidaConsole 10 bold",fg='#FF6600') :
         self.s = ttk.Style()
         self.s.theme_use('clam')
         self.s.configure("red.Horizontal.TProgressbar", foreground='red', background='red', troughcolor =bg)
@@ -50,11 +54,11 @@ class Mode:
         self.guivar = IntVar()
         self.guivar.set(self.value)
         
-        self.frame = tkinter.Frame(root, bg=bg)
+        self.frame = Tkinter.Frame(root, bg=bg)
         
-        self.innerframe = tkinter.Frame(self.frame, bg=bg)
-        Label(self.innerframe,anchor=W, text=self.downs[0].upper(), font=ft, bg=bg,fg=fg, width=13).pack(side=LEFT)
-        Label(self.innerframe,anchor=E, text=self.ups[0].upper(), font=ft, bg=bg,fg=fg, width=13).pack(side=LEFT)
+        self.innerframe = Tkinter.Frame(self.frame, bg=bg)
+        Label(self.innerframe,anchor=W, text=self.loname.upper(), font=ft, bg=bg,fg=fg, width=13).pack(side=LEFT)
+        Label(self.innerframe,anchor=E, text=self.hiname.upper(), font=ft, bg=bg,fg=fg, width=13).pack(side=LEFT)
         self.innerframe.pack()
         
         self.bar = ttk.Progressbar(self.frame, style="green.Horizontal.TProgressbar", orient='horizontal', \

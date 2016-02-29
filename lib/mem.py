@@ -1,6 +1,6 @@
-import tkinter
-from tkinter import *
-from tkinter import ttk
+import Tkinter
+from Tkinter import *
+import ttk
 
 import win32ui
 import win32process
@@ -48,29 +48,29 @@ class Stat(object):
         self.offsets = offsets
         self.guivar = 0
         self.val = 0
-		self.updaterate = updaterate
+        self.updaterate = updaterate
     def update(self):
-		try:
-			v = self.address
-			for a in offsets:
-				v = readStat(v,a)
-			self.val = ctypes.c_ulong(v).value
-		
-			#if self.name == "Health" and self.val == 0 and globals.PAUSE:
-			#    globals.GAME.resume()
-			self.guivar.set(self.val)    
-		except:
-			pass
+        try:
+            v = self.address
+            for a in offsets:
+                v = readStat(v,a)
+            self.val = ctypes.c_ulong(v).value
+        
+            #if self.name == "Health" and self.val == 0 and globals.PAUSE:
+            #    globals.GAME.resume()
+            self.guivar.set(self.val)    
+        except:
+            pass
     def createGui(self, root, bg='black',ft="LucidaConsole 20 bold",fg='#FF6600') :
         self.guivar=StringVar()
-        self.frame = tkinter.Frame(root, bg=bg)
+        self.frame = Tkinter.Frame(root, bg=bg)
         Label(self.frame, text=self.name+":",font=ft, bg=bg,fg=fg).pack(side="left")
         self.label = Label(self.frame, textvariable=self.guivar,font=ft, bg=bg,fg=fg).pack(side="left")
         return self.frame
-	def updateCycle(self):
-		while True:
-			sleep(self.updaterate)
-			self.update()
+    def updateCycle(self):
+        while True:
+            sleep(self.updaterate)
+            self.update()
         
 class Stats(object):
     def __init__(self, stats):

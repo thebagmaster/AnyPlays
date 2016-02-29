@@ -37,9 +37,9 @@ class Input(ctypes.Structure):
                 ("ii", Input_I)]
         
 def KeyStroke(hexKeyCode,press=True):
-	#	scan and press		scan and release
-	#	(0x0|0x8)			(0x2|0x8)
-	code = 0x8 if press else 0xa 
+    #    scan and press        scan and release
+    #    (0x0|0x8)            (0x2|0x8)
+    code = 0x8 if press else 0xa 
     if hexKeyCode == '' :
         return
     if hexKeyCode.isalpha() :
@@ -58,76 +58,76 @@ def MoveMouse(x, y):
     ii_.mi = MouseInput(x, y, 0, 0x0001, 1, ctypes.pointer(extra))
     x = Input(ctypes.c_ulong(0), ii_)
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
-	
+    
 def MoveMouseDelay(x,y,delay):
-	movements = max([abs(x),abs(y)])
-	pauselength = float(movements)/delay
-	stepx = 0
-	stepy = 0
+    movements = max([abs(x),abs(y)])
+    pauselength = float(movements)/delay
+    stepx = 0
+    stepy = 0
 
-	if self.dx > 0:
-		stepx = -1
-	elif self.dx < 0:
-		stepx = 1
-		
-	if self.dy > 0:
-		stepy = -1
-	elif self.dy < 0:
-		stepy = 1
-		
-	for i in range(movements):
-		MoveMouse(stepx,stepy)
-		x += stepx
-		y += stepy
-		if x == 0:
-			stepx = 0
-		if y == 0:
-			stepy = 0
-		sleep(pauselength)
+    if self.dx > 0:
+        stepx = -1
+    elif self.dx < 0:
+        stepx = 1
+        
+    if self.dy > 0:
+        stepy = -1
+    elif self.dy < 0:
+        stepy = 1
+        
+    for i in range(movements):
+        MoveMouse(stepx,stepy)
+        x += stepx
+        y += stepy
+        if x == 0:
+            stepx = 0
+        if y == 0:
+            stepy = 0
+        sleep(pauselength)
 
 def ClickMouse(evt):
-	evt = lookup[evt.upper()]
-	ctypes.windll.user32.mouse_event(evt, 0, 0, 0,0)
+    evt = lookup[evt.upper()]
+    ctypes.windll.user32.mouse_event(evt, 0, 0, 0,0)
         
 def JoystickPress(index,button,state):
-	if not init:
-		JoyInit()
-	joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
-	joy.SetButton(joyState[0],button,state)
-	vjoy.UpdateJoyState(index, joyState[0])
-	
+    if not init:
+        JoyInit()
+    joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
+    joy.SetButton(joyState[0],button,state)
+    vjoy.UpdateJoyState(index, joyState[0])
+    
 def JoystickAxis(index,axis,value):
-	if not init:
-		JoyInit()	
-	joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
-	joy.SetAxis(joyState[0],axis,value)
-	vjoy.UpdateJoyState(index, joyState[0])	
-	
+    if not init:
+        JoyInit()    
+    joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
+    joy.SetAxis(joyState[0],axis,value)
+    vjoy.UpdateJoyState(index, joyState[0])    
+    
 def JoystickPOV(index,pov,value):
-	if not init:
-		JoyInit()
-	joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
-	joy.SetPOV(joyState[0],pov,value)
-	vjoy.UpdateJoyState(index, joyState[0])	
+    if not init:
+        JoyInit()
+    joyState = [vjoy.JoystickState(), vjoy.JoystickState()]
+    joy.SetPOV(joyState[0],pov,value)
+    vjoy.UpdateJoyState(index, joyState[0])    
 
 def JoyInit():
-	init = True
-	try :
-		vjoy.Shutdown()
-	except :
-		pass
-	vjoy.Initialize()
+    init = True
+    try :
+        vjoy.Shutdown()
+    except :
+        pass
+    vjoy.Initialize()
 
 init = False   
 lookup = {
-	#mouse
-	'LBUTTOND':		   0x02,
-	'LBUTTONU':		   0x04,
-	'RBUTTOND':		   0x08,
-	'RBUTTONU':		   0x10,
-	'MBUTTOND':		   0x20,
-	'MBUTTONU':		   0x40,
-	#keybd
+    #mouse
+    'LBUTTOND':           0x02,
+    'LBUTTONU':           0x04,
+    'RBUTTOND':           0x08,
+    'RBUTTONU':           0x10,
+    'MBUTTOND':           0x20,
+    'MBUTTONU':           0x40,
+    #keybd
     'ESCAPE':          0x01,
     '1':               0x02,
     '2':               0x03,
